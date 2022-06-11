@@ -8,8 +8,39 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   firstName String
   lastName  String
+  email     String    @unique
+  bio       String?
+  messages  Message[]
+  groups    Channel[] @relation("ChannelMembers")
+  channels  Channel[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+}
+
+model Channel {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String    @unique
+  messages    Message[]
+  members     User[]    @relation("ChannelMembers")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  text      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  channel   Channel? @relation(fields: [channelId], references: [id])
+  channelId String?
+  isEdited  Boolean  @default(false)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
