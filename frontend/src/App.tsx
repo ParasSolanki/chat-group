@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import LoginPage from '@/pages/Login';
 
 function App() {
-  return <div>Hello chat group</div>;
+  return <LoginPage />;
 }
 
 export default App;
