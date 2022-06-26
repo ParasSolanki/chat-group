@@ -5,6 +5,7 @@ import {
   UserRoutes,
   ChannelRoutes,
   UserChannelsRoutes,
+  AuthRoutes,
 } from '@/routes'
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(
 )
 
 // Routes
+app.use('/api', AuthRoutes) // auth
 app.use('/api', UserRoutes) // user
 app.use('/api', ChannelRoutes) // channel
 app.use('/api', UserChannelsRoutes) // user channels
