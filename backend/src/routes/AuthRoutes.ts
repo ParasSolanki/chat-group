@@ -6,6 +6,7 @@ import { prisma } from '@/utils/prisma'
 import { createTokens } from '@/utils/tokens'
 
 router.post('/signup', validate(signupSchema), async (req, res) => {
+  console.log(req.body, 'body')
   const { body } = await zParse(signupSchema, req)
 
   const hasUser = await prisma.user.findUnique({

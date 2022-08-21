@@ -11,6 +11,15 @@ const labelClasses = 'inline-block text-base font-semibold text-slate-500 mb-1';
 const emailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+type SignupFormValues = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const SignupForm: React.FC = () => {
   const {
     register,
@@ -31,8 +40,23 @@ const SignupForm: React.FC = () => {
   const password = useRef({});
   password.current = watch('password', '');
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data: SignupFormValues) => {
+    const formData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+    };
+    try {
+      const res = await fetch('http://localhost:8000/api/signup', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
+      const jsonData = await res.json();
+      console.log(jsonData);
+    } catch (e) {
+      console.log(e, 'error');
+    }
   };
 
   return (
@@ -41,7 +65,7 @@ const SignupForm: React.FC = () => {
       className="max-w-2xl bg-white p-10 shadow-lg rounded-md mt-10"
     >
       <div className="space-y-5">
-        <div className="w-full ">
+        <div className="w-full">
           <label htmlFor="firstname" className={labelClasses}>
             Firstname
           </label>
@@ -60,7 +84,7 @@ const SignupForm: React.FC = () => {
             </span>
           )}
         </div>
-        <div className="w-full ">
+        <div className="w-full">
           <label htmlFor="lastname" className={labelClasses}>
             Lastname
           </label>

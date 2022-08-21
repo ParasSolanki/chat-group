@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import express from 'express'
 import bodyParser from 'body-parser'
+import cors from 'cors'
+
 import {
   ChannelMeassageRoutes,
   UserRoutes,
@@ -16,6 +18,11 @@ app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
     extended: true,
+  })
+)
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
   })
 )
 
