@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { LOGIN } from '@/constants/routes';
 
 const SignupPage = () => {
   return (
@@ -106,9 +108,9 @@ const SignupPage = () => {
 
           <p className="text-center text-base text-slate-500">
             <strong>Already have an Account?</strong>
-            <a href="#" className="ml-2 text-base text-blue-500 font-bold">
+            <Link to={LOGIN} className="ml-2 text-base text-blue-500 font-bold">
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </section>
