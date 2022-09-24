@@ -1,5 +1,5 @@
 {
-  "name": "chat-group-backend",
+  "name": "server",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
