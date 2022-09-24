@@ -1,0 +1,12 @@
+{
+  "name": "chat-group-monorepo",
+  "version": "1.0.0",
+  "description": "Chat group monorepo",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter ./packages/* run dev",
+    "client:build": "pnpm --filter ./packages/client run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
