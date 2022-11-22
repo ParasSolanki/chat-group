@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { LOGIN } from '@/constants/routes';
+import ROUTES from '@/constants/routes';
 
 const inputClasses =
   'appearance-none relative block w-full px-3 py-2 text-base placeholder-gray-500 text-gray-900 rounded-md ring-1 shadow ring-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500';
@@ -218,7 +218,7 @@ const SignupPage = () => {
 
           <p className="text-center text-base text-slate-500 mt-10">
             <strong>Already have an Account?</strong>
-            <Link to={LOGIN} className="ml-2 text-base text-blue-500 font-bold">
+            <Link to={ROUTES.LOGIN} className="ml-2 text-base text-blue-500 font-bold">
               Login
             </Link>
           </p>
