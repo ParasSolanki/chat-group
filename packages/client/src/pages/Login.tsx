@@ -1,6 +1,112 @@
 import React from 'react';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { SIGNUP } from '@/constants/routes';
+import ROUTES from '@/constants/routes';
+
+const inputClasses =
+  'appearance-none relative block w-full px-3 py-2 text-base placeholder-gray-500 text-gray-900 rounded-md ring-1 shadow ring-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500';
+const labelClasses = 'inline-block text-base font-semibold text-slate-500 mb-1';
+
+const emailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+const LoginForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const res = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      const jsonData = await res.json();
+      console.log(jsonData);
+    } catch (e) {
+      console.log(e, 'error');
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-2xl bg-white p-10 shadow-lg rounded-md mt-10"
+    >
+      <div className="space-y-5">
+        <div className="w-full">
+          <label htmlFor="email" className={labelClasses}>
+            Email
+          </label>
+          <input
+            id="email"
+            type="text"
+            {...register('email', {
+              required: 'Email is required',
+              pattern: {
+                value: emailRegex,
+                message: 'Please enter a valid email',
+              },
+            })}
+            className={classNames(inputClasses, {
+              '!ring-red-500 focus:ring-red-500': errors.email?.type,
+            })}
+            placeholder="e.g, johndoe@mail.com"
+          />
+          {errors.email?.type && (
+            <span className="text-red-500 inline-block mt-1">
+              {errors.email?.message}
+            </span>
+          )}
+        </div>
+        <div className="w-full">
+          <label htmlFor="password" className={labelClasses}>
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 8,
+                message: 'Password must have at least 8 characters',
+              },
+            })}
+            className={classNames(inputClasses, {
+              '!ring-red-500 focus:ring-red-500': errors.password?.type,
+            })}
+            placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+          />
+          {errors.password?.type && (
+            <span className="text-red-500 inline-block mt-1">
+              {errors.password?.message}
+            </span>
+          )}
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="w-full py-2 px-4 border border-transparent shadow-md font-semibold rounded-md mt-10 text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+      >
+        Login
+      </button>
+    </form>
+  );
+};
 
 const LoginPage = () => {
   return (
@@ -9,48 +115,11 @@ const LoginPage = () => {
         <div className="w-full max-w-xl mx-auto py-12 lg:py-16 px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-blue-500">Login</h2>
 
-          <form>
-            <div className="space-y-7 py-20 mb-7">
-              <div className="w-full">
-                <label
-                  htmlFor="email"
-                  className="inline-block text-base font-semibold text-slate-500 mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  className="w-full py-2 px-3 bg-white border-2 text-slate-500 border-slate-300 shadow-lg shadow-slate-200 rounded-lg focus:outline-none focus:border-blue-500"
-                  placeholder="e.g, johndoe@mail.com"
-                />
-              </div>
-              <div className="w-full">
-                <label
-                  htmlFor="password"
-                  className="inline-block text-base font-semibold text-slate-500 mb-2"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  className="w-full py-2 px-3 bg-white border-2 text-slate-500 border-slate-300 shadow-lg shadow-slate-200 rounded-lg focus:outline-none focus:border-blue-500"
-                  placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-2 mb-4 text-white text-base font-bold bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md shadow-lg shadow-slate-300 transition-colors hover:from-blue-500 hover:to-cyan-500"
-            >
-              Login
-            </button>
-          </form>
+          <LoginForm />
 
-          <p className="text-center text-base text-slate-500">
+          <p className="text-center text-base text-slate-500 mt-10">
             <strong>Don't have an Account?</strong>
-            <Link to={SIGNUP} className="ml-2 text-base text-blue-500 font-bold">
+            <Link to={ROUTES.SIGNUP} className="ml-2 text-base text-blue-500 font-bold">
               Sign up
             </Link>
           </p>

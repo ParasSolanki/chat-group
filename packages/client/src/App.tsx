@@ -1,19 +1,28 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { LOGIN, SIGNUP } from '@/constants/routes';
+import ROUTES from '@/constants/routes';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-const LoginPage = React.lazy(() => import('@/pages/Login'));
-const SignupPage = React.lazy(() => import('@/pages/Signup'));
-
-function App() {
+const lazyLoadable = (Component: React.LazyExoticComponent<() => JSX.Element>) => {
   return (
     <React.Suspense fallback="loading...">
-      <Routes>
-        <Route path={LOGIN} element={<LoginPage />} />
-        <Route path={SIGNUP} element={<SignupPage />} />
-      </Routes>
+      <Component />
     </React.Suspense>
   );
+};
+
+const router = createBrowserRouter([
+  {
+    path: ROUTES.LOGIN,
+    element: lazyLoadable(React.lazy(() => import('@/pages/Login'))),
+  },
+  {
+    path: ROUTES.SIGNUP,
+    element: lazyLoadable(React.lazy(() => import('@/pages/Signup'))),
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;
