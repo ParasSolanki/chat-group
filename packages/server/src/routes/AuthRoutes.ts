@@ -1,33 +1,25 @@
 import bcrypt from 'bcrypt'
-import { FastifyInstance, RouteShorthandOptions } from 'fastify'
-import { zParse } from '@/utils/validate'
+import { FastifyInstance } from 'fastify'
 import { signupBodySchema } from '@/validators/auth'
 import { prisma } from '@/utils/prisma'
 import { createTokens } from '@/utils/tokens'
-import { z } from 'zod'
 
 async function authRoutes(fastify: FastifyInstance) {
-  fastify.post(
-    '/signup',
-    {
-      schema: { body: signupBodySchema },
-      validatorCompiler: ({ schema }) => {
-        return (data) => {
-          if (schema.body) {
-            const err = schema.body.safeParse(data)
-
-            console.log(err.success)
-          }
-        }
-      },
+  fastify.withTypeProvider().route({
+    url: '/signup',
+    method: 'POST',
+    schema: {
+      body: signupBodySchema,
     },
-    async (request, reply) => {
+    handler: async (request, reply) => {
+      const { body } = request
+
       const hasUser = await prisma.user.findUnique({
         where: { email: body.email },
       })
 
       if (hasUser) {
-        return res.status(409).send({
+        return reply.status(409).send({
           success: false,
           error: { message: 'User with email already exists' },
         })
@@ -62,25 +54,25 @@ async function authRoutes(fastify: FastifyInstance) {
           },
         })
 
-        res.cookie('token', refreshToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'none',
-          maxAge: 24 * 60 * 60 * 1000,
-        })
+        // reply.cookie('token', refreshToken, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: 'none',
+        //   maxAge: 24 * 60 * 60 * 1000,
+        // })
 
-        res.status(200).send({
+        reply.status(200).send({
           success: true,
           accessToken,
         })
       } catch (e) {
-        res.status(500).send({
+        reply.status(500).send({
           success: false,
           error: { message: e },
         })
       }
-    }
-  )
+    },
+  })
 }
 
 export default authRoutes
