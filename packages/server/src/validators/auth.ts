@@ -1,7 +1,7 @@
 import z from 'zod'
 
-export const signupSchema = z.object({
-  body: z.object({
+export const signupBodySchema = z.object(
+  {
     firstName: z
       .string({
         required_error: 'First name is required',
@@ -20,5 +20,9 @@ export const signupSchema = z.object({
     password: z
       .string({ required_error: 'Password is required' })
       .min(6, { message: 'Password must have 6 or more character' }),
-  }),
-})
+  },
+  {
+    required_error: 'Body cant be empty',
+    invalid_type_error: 'Body cant be empty',
+  }
+)

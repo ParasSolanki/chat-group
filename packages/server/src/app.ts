@@ -1,36 +1,24 @@
 import 'dotenv/config'
-import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
+import Fastify from 'fastify'
+import ZodValidator from './plugins/zod-validator'
 
-import {
-  ChannelMeassageRoutes,
-  UserRoutes,
-  ChannelRoutes,
-  UserChannelsRoutes,
-  AuthRoutes,
-} from '@/routes'
+import AuthRoutes from '@/routes/AuthRoutes'
 
-const app = express()
-const PORT = process.env.PORT || 8000
+const fastify = Fastify({ logger: true })
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000
 
-app.use(bodyParser.json())
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-)
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-  })
-)
+fastify.register(ZodValidator)
 
-// Routes
-app.use('/api', AuthRoutes) // auth
-app.use('/api', UserRoutes) // user
-app.use('/api', ChannelRoutes) // channel
-app.use('/api', UserChannelsRoutes) // user channels
-app.use('/api', ChannelMeassageRoutes) // channel meassages
+fastify.register(AuthRoutes)
 
-app.listen(PORT, () => console.log(`App listening on http://localhost:${PORT}`))
+/** RUN the server */
+const start = async () => {
+  try {
+    await fastify.listen({ port: PORT })
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
+
+start()
