@@ -1,7 +1,6 @@
-import { Response } from 'express'
 import { prisma } from '@/utils/prisma'
 
-export async function getChannels(_: any, res: Response) {
+export async function getChannels(_: any, res) {
   const channels = await prisma.channel.findMany({
     include: {
       author: {

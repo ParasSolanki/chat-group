@@ -1,7 +1,6 @@
-import { Request, Response } from 'express'
 import { prisma } from '@/utils/prisma'
 
-export async function getUserChannels(req: Request, res: Response) {
+export async function getUserChannels(req, res) {
   const { id } = req.params
 
   try {
