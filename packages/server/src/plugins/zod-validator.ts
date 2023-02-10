@@ -46,10 +46,19 @@ const ZodValidator: FastifyPluginCallback<FastifyZodValidateOptions> = (
         errorCode: issue.code,
       }))
 
-      const errors = formErrors ?? fieldErrors
+      let errors = 'Response is incompatible with the schema'
+
+      if (!Array.isArray(formErrors) && typeof formErrors === 'object') {
+        errors = JSON.stringify(formErrors)
+      } else if (
+        !Array.isArray(fieldErrors) &&
+        typeof fieldErrors === 'object'
+      ) {
+        errors = JSON.stringify(fieldErrors)
+      }
 
       return {
-        error: new Error(JSON.stringify(errors)),
+        error: new Error(errors),
       }
     },
     handleSerializerError: () =>
