@@ -41,7 +41,14 @@ const ZodValidator: FastifyPluginCallback<FastifyZodValidateOptions> = (
      * default error handlers
      */
     handleValidatorError: (error: z.ZodError<any>) => {
-      return { error }
+      const { fieldErrors } = error.flatten((issue) => ({
+        message: issue.message,
+        errorCode: issue.code,
+      }))
+
+      return {
+        error: new Error(JSON.stringify(fieldErrors)),
+      }
     },
     handleSerializerError: () =>
       new Error('Response is incompatible with the schema'),
