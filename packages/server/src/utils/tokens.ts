@@ -25,7 +25,7 @@ export const createTokens = async (user: any) => {
     },
     SECRET_TOKEN2,
     {
-      expiresIn: '7d',
+      expiresIn: '1d',
     }
   )
 

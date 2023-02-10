@@ -14,15 +14,24 @@ async function authRoutes(fastify: FastifyInstance) {
     handler: async (request, reply) => {
       const { body } = request
 
-      const hasUser = await prisma.user.findUnique({
-        where: { email: body.email },
-      })
-
-      if (hasUser) {
-        return reply.status(409).send({
-          success: false,
-          error: { message: 'User with email already exists' },
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email: body.email },
         })
+
+        if (user) {
+          reply.status(409).send({
+            success: false,
+            error: { message: 'User with email already exists' },
+          })
+          return
+        }
+      } catch (e) {
+        reply.status(500).send({
+          success: false,
+          error: { message: 'Something went wrong' },
+        })
+        return
       }
 
       try {
@@ -54,16 +63,22 @@ async function authRoutes(fastify: FastifyInstance) {
           },
         })
 
-        // reply.cookie('token', refreshToken, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: 'none',
-        //   maxAge: 24 * 60 * 60 * 1000,
-        // })
+        reply.cookie('access_token', accessToken, {
+          httpOnly: true,
+          sameSite: 'lax',
+          maxAge: 15 * 60 * 1000,
+          signed: true,
+        })
+        reply.cookie('refresh_token', refreshToken, {
+          httpOnly: true,
+          sameSite: 'lax',
+          maxAge: 59 * 60 * 1000,
+          signed: true,
+        })
 
         reply.status(200).send({
           success: true,
-          accessToken,
+          user: user,
         })
       } catch (e) {
         reply.status(500).send({
