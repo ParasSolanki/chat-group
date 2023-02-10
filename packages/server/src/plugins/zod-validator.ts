@@ -41,13 +41,15 @@ const ZodValidator: FastifyPluginCallback<FastifyZodValidateOptions> = (
      * default error handlers
      */
     handleValidatorError: (error: z.ZodError<any>) => {
-      const { fieldErrors } = error.flatten((issue) => ({
+      const { formErrors, fieldErrors } = error.flatten((issue) => ({
         message: issue.message,
         errorCode: issue.code,
       }))
 
+      const errors = formErrors ?? fieldErrors
+
       return {
-        error: new Error(JSON.stringify(fieldErrors)),
+        error: new Error(JSON.stringify(errors)),
       }
     },
     handleSerializerError: () =>
