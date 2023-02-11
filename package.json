@@ -4,7 +4,9 @@
   "description": "Chat group monorepo",
   "scripts": {
     "dev": "pnpm -r --parallel --filter ./packages/* run dev",
-    "client:build": "pnpm --filter ./packages/client run build"
+    "dev:client": "pnpm --filter ./packages/client run dev",
+    "dev:server": "pnpm --filter ./packages/server run dev",
+    "build:client": "pnpm --filter ./packages/client run build"
   },
   "keywords": [],
   "author": "",
