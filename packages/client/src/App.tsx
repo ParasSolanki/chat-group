@@ -1,20 +1,7 @@
 import React from 'react';
 import ROUTES from '@/constants/routes';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import { create } from 'zustand';
-
-type AuthStore =
-  | {
-      loggedIn: false;
-      user: undefined;
-    }
-  | { loggedIn: true; user: { firstName: string } };
-
-const useAuthStore = create<AuthStore>((set) => ({
-  loggedIn: false,
-  user: undefined,
-  login: () => set(() => ({ loggedIn: true, user: { firstName: 'name' } })),
-}));
+import { useAuthStore } from './auth';
 
 const RequireUser: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const loggedIn = useAuthStore((state) => state.loggedIn);

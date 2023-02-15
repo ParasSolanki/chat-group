@@ -1,8 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ROUTES from '@/constants/routes';
+import { useAuthStore } from '@/auth';
 
 const inputClasses =
   'appearance-none relative block w-full px-3 py-2 text-base placeholder-gray-500 text-gray-900 rounded-md ring-1 shadow ring-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500';
@@ -17,6 +18,8 @@ type LoginFormValues = {
 };
 
 const LoginForm = () => {
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,9 +36,16 @@ const LoginForm = () => {
       const res = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
         body: JSON.stringify(data),
+        headers: {
+          'Content-type': 'application/json',
+        },
       });
       const jsonData = await res.json();
-      console.log(jsonData);
+
+      if (jsonData.success) {
+        login(jsonData.user.firstName);
+        navigate(ROUTES.HOME);
+      }
     } catch (e) {
       console.log(e, 'error');
     }
@@ -54,6 +64,7 @@ const LoginForm = () => {
           <input
             id="email"
             type="text"
+            autoComplete="off"
             {...register('email', {
               required: 'Email is required',
               pattern: {
@@ -79,6 +90,7 @@ const LoginForm = () => {
           <input
             id="password"
             type="password"
+            autoComplete="off"
             {...register('password', {
               required: 'Password is required',
               minLength: {
