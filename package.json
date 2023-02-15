@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Chat group monorepo",
   "scripts": {
-    "dev": "pnpm -r --parallel --filter ./packages/* run dev",
-    "dev:client": "pnpm --filter ./packages/client run dev",
-    "dev:server": "pnpm --filter ./packages/server run dev",
-    "build:client": "pnpm --filter ./packages/client run build"
+    "dev": "pnpm -r --parallel --filter ./apps/* run dev",
+    "dev:client": "pnpm --filter ./apps/client run dev",
+    "dev:server": "pnpm --filter ./apps/server run dev",
+    "build:client": "pnpm --filter ./apps/client run build"
   },
   "keywords": [],
   "author": "",

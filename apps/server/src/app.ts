@@ -23,7 +23,7 @@ fastify.register(cookie, {
 })
 fastify.register(ZodValidator)
 
-fastify.register(AuthRoutes, { prefix: '/api' })
+fastify.register(AuthRoutes, { prefix: '/api/auth' })
 
 /** RUN the server */
 const start = async () => {

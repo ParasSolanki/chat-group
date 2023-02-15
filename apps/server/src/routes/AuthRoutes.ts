@@ -165,6 +165,19 @@ async function authRoutes(fastify: FastifyInstance) {
       }
     },
   })
+
+  // session
+  fastify.withTypeProvider().route({
+    url: '/session',
+    method: 'GET',
+    handler: async (request, reply) => {
+      console.log({ request, reply })
+
+      reply.status(200).send({
+        success: true,
+      })
+    },
+  })
 }
 
 export default authRoutes
